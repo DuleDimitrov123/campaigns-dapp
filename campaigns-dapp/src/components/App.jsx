@@ -4,11 +4,13 @@ import Campaigns from "./Campaigns";
 import CreateCampaign from "./CreateCampaign";
 import Campaign from "./Campaign";
 import theme from "./theme";
+import Header from "./Header";
 
 const App = () => {
     return (
         <BrowserRouter>
             <ChakraProvider theme={theme}>
+            <Header />
                 <div>
                     <Routes>
                         <Route path="/" exact Component={Campaigns} />

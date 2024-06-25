@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import web3 from "../ethereum/web3";
 import CampaignManagerContract from "../ethereum/campaignManagerContract";
 import CampaignContract from '../ethereum/campaignContract';
+import {  Flex, Heading, SimpleGrid, } from "@chakra-ui/react";
+import CampaignCard from "./CampaignCard";
 
 const Campaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -37,7 +39,17 @@ const Campaigns = () => {
     }, [])
 
     return(
-        <div>CAMPAIGNS</div>
+         <Flex w='100%' h='93vh' p='4' flexDir={'column'} gap='10'>
+            <Heading as='h2' size='2xl'>
+                All Campaignes
+            </Heading>
+        <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(400px, 1fr))' >
+            {campaigns?.map((campaign, index)=>(
+                  <CampaignCard key={index} campaign={campaign} />
+            ))}
+      </SimpleGrid>
+      </Flex>
+
     )
 }
 
