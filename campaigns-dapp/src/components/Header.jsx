@@ -8,7 +8,7 @@ const Header = () => {
     <Box bg="gray.50" px={4} borderBottom="2px" borderColor="gray.200" h='7vh'>
       <Flex h={'100%'} alignItems="center" justifyContent="space-between">
         <Box>
-          <Text fontWeight={'700'} color='blue.500'>CAMPAIGNS DAPP</Text>
+          <Text fontWeight={'700'} color='blue.500' >CAMPAIGNS DAPP</Text>
         </Box>
         <HStack as="nav" spacing={4}>
           <Link as={NavLink} to="/" style={({ isActive }) => ({
