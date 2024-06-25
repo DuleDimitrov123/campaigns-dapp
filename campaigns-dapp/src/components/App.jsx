@@ -1,5 +1,24 @@
+import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Campaigns from "./Campaigns";
+import CreateCampaign from "./CreateCampaign";
+import Campaign from "./Campaign";
+import theme from "./theme";
+
 const App = () => {
-    return <div>App</div>
+    return (
+        <BrowserRouter>
+            <ChakraProvider theme={theme}>
+                <div>
+                    <Routes>
+                        <Route path="/" exact Component={Campaigns} />
+                        <Route path="/campaign/new" Component={CreateCampaign}/>
+                        <Route path="/campaign/:address" exact Component={Campaign} />
+                    </Routes>
+                </div>
+            </ChakraProvider>
+        </BrowserRouter>
+    )
 }
 
 export default App;
