@@ -18,6 +18,7 @@ const Campaign = () => {
         requests: []
     });
     const [totalDonationsInEth, setTotalDonationsInEth] = useState(0);
+    const [numberOfDonors, setNumberOfDonors] = useState(0);
 
     const fetchCampaignDetails = async () => {
         setLoading(true);
@@ -49,6 +50,9 @@ const Campaign = () => {
         var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
         setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
 
+        const donors = await campaignContract.methods.getDonors().call();
+        setNumberOfDonors(donors.length);
+
         setLoading(false);
     }
 
@@ -66,7 +70,12 @@ const Campaign = () => {
 
     return(
         <Flex flexDir={'row'} gap='30' h='93vh'  p='4'>
-            <CampaignInfo campaign={campaign} totalDonationsInEth={totalDonationsInEth} fetchCampaignDetails={fetchCampaignDetails} />
+            <CampaignInfo 
+                campaign={campaign} 
+                totalDonationsInEth={totalDonationsInEth} 
+                fetchCampaignDetails={fetchCampaignDetails}
+                numberOfDonors={numberOfDonors}
+            />
             <CampaignRequests requests={campaign?.requests} />
         </Flex>
     )

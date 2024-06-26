@@ -4,7 +4,7 @@ import CreateRequestModal from "./CreateRequestModal";
 import DonateModal from "./DonateModal";
 
 
-const CampaignInfo = ({campaign,totalDonationsInEth, fetchCampaignDetails}) => {
+const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, numberOfDonors}) => {
     const { address } = useParams();
 
     const { isOpen: isCreateRequestModalOpen, onOpen: onCreateRequestModalOpen, onClose: onCreateRequestModalClose } = useDisclosure();
@@ -32,6 +32,10 @@ const CampaignInfo = ({campaign,totalDonationsInEth, fetchCampaignDetails}) => {
                     <Flex gap='1' alignItems={'start'} flexDir={'column'}>
                         <Text fontSize={'md'} color='gray.500'>Total donations in ETH:</Text>
                         <Text color='blue.600' fontSize='xl'> {totalDonationsInEth} </Text>
+                    </Flex>
+                    <Flex gap='1' alignItems={'start'} flexDir={'column'}>
+                        <Text fontSize={'md'} color='gray.500'>Number of donors:</Text>
+                        <Text color='blue.600' fontSize='xl'> {numberOfDonors} </Text>
                     </Flex>
                 </Stack>
             </VStack>
