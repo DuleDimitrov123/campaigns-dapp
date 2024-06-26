@@ -18,8 +18,8 @@ const CampaignCard = ({campaign}) => {
           <Stack spacing='3'>
             <Text fontSize={'md'}>{campaign?.description}</Text>
             <Flex gap='1' alignItems={'start'} flexDir={'column'}>
-              <Text fontSize={'md'} color='gray.500'>Minimum donation in Wei:</Text>
-              <Text color='blue.600' fontSize='xl'> {campaign?.minDonationInWei} </Text>
+              <Text fontSize={'md'} color='gray.500'>Minimum donation in ETH:</Text>
+              <Text color='blue.600' fontSize='xl'> {campaign?.minDonationInEth} </Text>
             </Flex>
             <Flex gap='1' alignItems={'start'} flexDir={'column'}>
               <Text fontSize={'md'} color='gray.500'>Organiser:</Text>

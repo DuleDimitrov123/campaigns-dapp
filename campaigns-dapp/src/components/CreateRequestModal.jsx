@@ -12,7 +12,8 @@ import {
   FormControl,
   FormLabel,
   Textarea,
-  FormErrorMessage
+  FormErrorMessage,
+  Input
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 
@@ -27,7 +28,11 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
         let error;
         if (!value) {
           error = 'Request value is required';
-        } 
+        } else if (isNaN(value)) {
+          error = 'Request value must be a number';
+        } else if (parseFloat(value) <= 0) {
+          error = 'Request value must be greater than zero';
+        }
         return error;
       }
 
@@ -43,11 +48,16 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
         const campaignContract = CampaignContract(campaignAddress);
         const accounts = await web3.eth.getAccounts();
 
-        await campaignContract.methods.createRequest(request.description, request.value)
+        console.log("Before conversion");
+        const valueInWei = web3.utils.toWei(`${request.value}`, 'ether');
+        console.log(`After conversion: ${valueInWei}`);
+        await campaignContract.methods.createRequest(request.description, valueInWei)
             .send({from:accounts[0], gas:'5000000'});
 
+        console.log("after creating request");
         formikActions.setSubmitting(false);
         onClose();
+        console.log("end method!");
     }
 
     return (
@@ -78,10 +88,13 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
                         <Field name='value' validate={validateValue}>
                             {({ field, form}) => (
                                 <FormControl isInvalid={form.errors.value && form.touched.value}>
-                                    <FormLabel>Value for campaign request</FormLabel>
-                                    <Textarea
-                                        {...field} placeholder='Enter value...'
+                                    <FormLabel>Value in ETH for campaign request</FormLabel>
+                                    <Input
+                                        {...field}
+                                        placeholder='Enter value...'
                                         size='sm'
+                                        type='number'
+                                        step='0.01'
                                     />
                                     <FormErrorMessage>{form.errors.value}</FormErrorMessage>
                                 </FormControl>

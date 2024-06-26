@@ -3,6 +3,14 @@ import React  from "react";
 
 const RequestCard = ({request}) => {
     console.log(request);
+    const approve = async () => {
+        console.log("APPROVE!");
+    }
+
+    const finalize = async () => {
+        console.log("FINALIZE");
+    }
+
     return(
         <Card background={'gray.50'}>
             <CardHeader>
@@ -11,7 +19,7 @@ const RequestCard = ({request}) => {
             <CardBody>
                 <Stack spacing='3'>
                     <Text>{request.desc}</Text>
-                    <Text>{request.val} wei requested</Text>
+                    <Text>{request.val} ETH requested</Text>
                     <Text>
                         {request.compl
                         ? 'completed'
@@ -19,8 +27,9 @@ const RequestCard = ({request}) => {
                     </Text>
                 </Stack>
             </CardBody>
-            <CardFooter>
-                <Button colorScheme="blue" >Approve</Button>
+            <CardFooter gap={3}>
+                <Button colorScheme="blue" onClick={() => approve()}>Approve</Button>
+                <Button colorScheme="blue" onClick={() => finalize()}>Finalize</Button>
             </CardFooter>
         </Card>
     )

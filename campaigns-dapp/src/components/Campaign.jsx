@@ -1,4 +1,4 @@
-import { Flex, Heading, Spinner, Stack, Text, Button, useDisclosure, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Heading, Spinner, Stack, Text, Button, useDisclosure, SimpleGrid, VStack, } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CampaignContract from "../ethereum/campaignContract";
@@ -41,7 +41,9 @@ const Campaign = () => {
             let requests = [];
             console.log(requestsCount);
             for (let i=0; i<= requestsCount - 1; i++) {
-                requests.push(await campaignContract.methods.getRequest(i).call());
+                let request = await campaignContract.methods.getRequest(i).call();
+                request.val = web3.utils.fromWei(request.val, 'ether')
+                requests.push(request);
             }
 
             setCampaign({
@@ -69,9 +71,9 @@ const Campaign = () => {
     }
 
     return(
-        <Flex w='100%' h='10%' flexDir={'column'} >
-            <Flex flexDir={'row'}>
-                <Flex w='65%' h='93vh' p='4' flexDir={'column'} gap='10' background={'gray.50'}>
+        <Flex flexDir={'row'} gap='30'>
+            <Flex w='50%' h='93vh' p='4' flexDir={'column'} gap='10' background={'gray.50'}>
+                <VStack align="start" spacing="6">
                     <Heading as='h2' size='2xl'>
                         Campaign: {campaign?.title}
                     </Heading>
@@ -90,21 +92,24 @@ const Campaign = () => {
                             <Text color='blue.600' fontSize='xl'> {totalDonationsInEth} </Text>
                         </Flex>
                     </Stack>
-                </Flex>
-                <Flex flexDir={'column'}>
-                    <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 0.5fr))' >
-                        {campaign?.requests?.map((request, index) => (
-                            <RequestCard key={index} request={request} />
-                        ))}
-                    </SimpleGrid>
+                </VStack>
+                <Flex gap='10'>
+                    <Button onClick={onCreateRequestModalOpen} colorScheme="blue" >Add request</Button>
+                    <CreateRequestModal isOpen={isCreateRequestModalOpen} onClose={onCreateRequestModalClose} campaignAddress={address}  />
+
+                    <Button onClick={onDonateModalOpen} colorScheme="blue" >Donate</Button>
+                    <DonateModal isOpen={isDonateModalOpen} onClose={onDonateModalClose} campaignAddress={address} />
                 </Flex>
             </Flex>
-            <Flex gap='3' alignItems={'start'}>
-                <Button onClick={onCreateRequestModalOpen} colorScheme="blue" >Add request</Button>
-                <CreateRequestModal isOpen={isCreateRequestModalOpen} onClose={onCreateRequestModalClose} campaignAddress={address}  />
-
-                <Button onClick={onDonateModalOpen} colorScheme="blue" >Donate</Button>
-                <DonateModal isOpen={isDonateModalOpen} onClose={onDonateModalClose} campaignAddress={address} />
+            <Flex w='50%' flexDir={'column'} gap='5'>
+                <Heading as='h3' size='2xl'>
+                    Requests for this campaign
+                </Heading>
+                <SimpleGrid spacing={4} templateColumns="repeat(2, 1fr)" >
+                    {campaign?.requests?.map((request, index) => (
+                        <RequestCard key={index} request={request} />
+                    ))}
+                </SimpleGrid>
             </Flex>
         </Flex>
     )

@@ -28,7 +28,8 @@ const Campaigns = () => {
                         campaign["organiser"] = await campaignContract.methods.organiser().call(),
                         campaign["title"] = await campaignContract.methods.title().call(),
                         campaign["description"] = await campaignContract.methods.description().call(),
-                        campaign["minDonationInWei"] = await campaignContract.methods.minDonationInWei().call(),
+                        campaign["minDonationInEth"] = web3.utils.fromWei(
+                            await campaignContract.methods.minDonationInWei().call(), 'ether'),
                     )
                     return campaign;
                 })
