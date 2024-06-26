@@ -49,16 +49,16 @@ const Campaigns = () => {
     }
 
     return(
-         <Flex w='100%' h='93vh' p='4' flexDir={'column'} gap='10'>
+        <Flex w='100%' h='93vh' p='4' flexDir={'column'} gap='10'>
             <Heading as='h2' size='2xl'>
                 All Campaignes
             </Heading>
-        <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(400px, 1fr))' >
-            {campaigns?.map((campaign, index)=>(
-                  <CampaignCard key={index} campaign={campaign} />
-            ))}
-      </SimpleGrid>
-      </Flex>
+            <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(400px, 1fr))' >
+                {campaigns?.map((campaign, index)=>(
+                    <CampaignCard key={index} campaign={campaign} />
+                ))}
+            </SimpleGrid>
+        </Flex>
     )
 }
 

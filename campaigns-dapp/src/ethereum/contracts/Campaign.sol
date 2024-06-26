@@ -93,6 +93,10 @@ contract Campaign {
         );
     }
 
+    function getRequestCount() public view returns (uint) {
+        return requests.length;
+    }
+
     modifier onlyDonor() {
         require(donations[msg.sender] > 0, "This is only donor action");
         _;
