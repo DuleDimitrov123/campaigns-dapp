@@ -6,18 +6,22 @@ import CreateRequestModal from "./CreateRequestModal";
 import RequestCard from "./RequestCard";
 import DonateModal from "./DonateModal";
 
+import web3 from "../ethereum/web3";
+
 const Campaign = () => {
     const { address } = useParams();
+
+    //const valueInEth = web3.utils.fromWei(valueInWei, 'ether');
 
     const [loading, setLoading] = useState(false);
     const [campaign, setCampaign] = useState({
         organiser: '',
         title: '',
         description: '',
-        minDonationInWei: '',
+        minDonationInEth: '',
         requests: []
     });
-    const [totalDonations, setTotalDonations] = useState(0);
+    const [totalDonationsInEth, setTotalDonationsInEth] = useState(0);
 
     const { isOpen: isCreateRequestModalOpen, onOpen: onCreateRequestModalOpen, onClose: onCreateRequestModalClose } = useDisclosure();
     const { isOpen: isDonateModalOpen, onOpen: onDonateModalOpen, onClose: onDonateModalClose } = useDisclosure();
@@ -31,6 +35,7 @@ const Campaign = () => {
             const title = await campaignContract.methods.title().call();
             const description = await campaignContract.methods.description().call();
             const minDonationInWei = await campaignContract.methods.minDonationInWei().call();
+            const minDonationInEth = web3.utils.fromWei(minDonationInWei, 'ether');
             const requestsCount = await campaignContract.methods.getRequestCount().call();
 
             let requests = [];
@@ -43,11 +48,12 @@ const Campaign = () => {
                 organiser: organiser,
                 title: title,
                 description: description,
-                minDonationInWei: minDonationInWei,
+                minDonationInEth: minDonationInEth,
                 requests:requests
             });
 
-            setTotalDonations(await campaignContract.methods.getTotalDonations().call());
+            var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
+            setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
 
             setLoading(false);
         }
@@ -72,16 +78,16 @@ const Campaign = () => {
                     <Stack mt="6" spacing="3">
                         <Text fontSize={'md'}>{campaign?.description}</Text>
                         <Flex gap='1' alignItems={'start'} flexDir={'column'}>
-                            <Text fontSize={'md'} color='gray.500'>Minimum donation in Wei:</Text>
-                            <Text color='blue.600' fontSize='xl'>{campaign?.minDonationInWei}</Text>
+                            <Text fontSize={'md'} color='gray.500'>Minimum donation in ETH:</Text>
+                            <Text color='blue.600' fontSize='xl'>{campaign?.minDonationInEth}</Text>
                         </Flex>
                         <Flex gap='1' alignItems={'start'} flexDir={'column'}>
                             <Text fontSize={'md'} color='gray.500'>Organiser:</Text>
                             <Text color='blue.600' fontSize='xl'> {campaign?.organiser} </Text>
                         </Flex>
                         <Flex gap='1' alignItems={'start'} flexDir={'column'}>
-                            <Text fontSize={'md'} color='gray.500'>Total donations in wei:</Text>
-                            <Text color='blue.600' fontSize='xl'> {totalDonations} </Text>
+                            <Text fontSize={'md'} color='gray.500'>Total donations in ETH:</Text>
+                            <Text color='blue.600' fontSize='xl'> {totalDonationsInEth} </Text>
                         </Flex>
                     </Stack>
                 </Flex>
@@ -98,7 +104,7 @@ const Campaign = () => {
                 <CreateRequestModal isOpen={isCreateRequestModalOpen} onClose={onCreateRequestModalClose} campaignAddress={address}  />
 
                 <Button onClick={onDonateModalOpen} colorScheme="blue" >Donate</Button>
-                <DonateModal isOpen={isDonateModalOpen} onClose={onDonateModalClose} />
+                <DonateModal isOpen={isDonateModalOpen} onClose={onDonateModalClose} campaignAddress={address} />
             </Flex>
         </Flex>
     )

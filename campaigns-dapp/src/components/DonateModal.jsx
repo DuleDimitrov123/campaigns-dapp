@@ -11,7 +11,7 @@ import {
   Text,
   FormControl,
   FormLabel,
-  Textarea,
+  Input,
   FormErrorMessage
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
@@ -19,16 +19,36 @@ import { Field, Form, Formik } from 'formik';
 import CampaignContract from '../ethereum/campaignContract';
 import web3 from "../ethereum/web3";
 
-const DonateModal = ({isOpen, onClose}) => {
+const DonateModal = ({isOpen, onClose, campaignAddress}) => {
     const initialValues={donationValue:''};
 
     const validateDonationValue = (value) => {
         let error;
         if (!value) {
-          error = 'Request value is required';
-        } 
+          error = 'Donation value is required';
+        } else if (isNaN(value)) {
+          error = 'Donation value must be a number';
+        } else if (parseFloat(value) <= 0) {
+          error = 'Donation value must be greater than zero';
+        }
         return error;
-      }
+      };
+
+    const donate = async (values, formikActions) => {
+        const campaignContract = CampaignContract(campaignAddress);
+        const accounts = await web3.eth.getAccounts();
+
+        const donationWei = web3.utils.toWei(`${values.donationValue}`, 'ether');
+
+        await campaignContract.methods.donate()
+            .send({
+                from:accounts[0], 
+                value: donationWei,
+                gas:'5000000'});
+
+        formikActions.setSubmitting(false);
+        onClose();
+    }
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -38,6 +58,7 @@ const DonateModal = ({isOpen, onClose}) => {
             <ModalCloseButton />
             <Formik
                 initialValues={initialValues}
+                onSubmit={async (values, actions) => donate(values, actions)}
             >
             {(props) => (
                 <Form>
@@ -45,10 +66,13 @@ const DonateModal = ({isOpen, onClose}) => {
                         <Field name='donationValue' validate={validateDonationValue}>
                             {({ field, form}) => (
                                 <FormControl isInvalid={form.errors.donationValue && form.touched.donationValue}>
-                                    <FormLabel>Donation value</FormLabel>
-                                    <Textarea
-                                        {...field} placeholder='Enter donation value...'
+                                    <FormLabel>Donation value in ETH</FormLabel>
+                                    <Input
+                                        {...field}
+                                        placeholder='Enter donation value...'
                                         size='sm'
+                                        type='number'
+                                        step='0.01'
                                     />
                                     <FormErrorMessage>{form.errors.donationValue}</FormErrorMessage>
                                 </FormControl>

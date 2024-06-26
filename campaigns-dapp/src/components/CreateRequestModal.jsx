@@ -47,7 +47,6 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
             .send({from:accounts[0], gas:'5000000'});
 
         formikActions.setSubmitting(false);
-        console.log("DONE");
         onClose();
     }
 
