@@ -20,18 +20,20 @@ import { Field, Form, Formik } from 'formik';
 import CampaignContract from '../ethereum/campaignContract';
 import web3 from "../ethereum/web3";
 
-const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
+const CreateRequestModal = ({ isOpen, onClose, campaignAddress, fetchCampaignDetails }) => {
+
+    console.log(fetchCampaignDetails);
 
     const initialValues={description:'', value:''};
 
     const validateValue = (value) => {
         let error;
         if (!value) {
-          error = 'Request value is required';
+            error = 'Request value is required';
         } else if (isNaN(value)) {
-          error = 'Request value must be a number';
+            error = 'Request value must be a number';
         } else if (parseFloat(value) <= 0) {
-          error = 'Request value must be greater than zero';
+            error = 'Request value must be greater than zero';
         }
         return error;
       }
@@ -48,16 +50,13 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress }) => {
         const campaignContract = CampaignContract(campaignAddress);
         const accounts = await web3.eth.getAccounts();
 
-        console.log("Before conversion");
         const valueInWei = web3.utils.toWei(`${request.value}`, 'ether');
-        console.log(`After conversion: ${valueInWei}`);
         await campaignContract.methods.createRequest(request.description, valueInWei)
             .send({from:accounts[0], gas:'5000000'});
 
-        console.log("after creating request");
         formikActions.setSubmitting(false);
         onClose();
-        console.log("end method!");
+        fetchCampaignDetails();
     }
 
     return (

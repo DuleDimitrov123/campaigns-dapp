@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Heading, Stack,Text } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Stack,Text } from "@chakra-ui/react";
 import React  from "react";
 
-const RequestCard = ({request}) => {
+const RequestCard = ({request,index}) => {
     console.log(request);
     const approve = async () => {
         console.log("APPROVE!");
@@ -12,19 +12,29 @@ const RequestCard = ({request}) => {
     }
 
     return(
-        <Card background={'gray.50'}>
+        <Card >
             <CardHeader>
-                <Heading size='md'>{request.description}</Heading>
+                <Text fontSize='lg' fontWeight={'700'}>Request {index+1}</Text>
             </CardHeader>
             <CardBody>
                 <Stack spacing='3'>
+                    <Flex gap='1'>
+                    <Text fontWeight={'700'}>Description:</Text>
                     <Text>{request.desc}</Text>
-                    <Text>{request.val} ETH requested</Text>
+                    </Flex>
+                    <Flex gap='1'>
+                    <Text fontWeight={'700'}>Requested ETH:</Text>
+                    <Text> {request.val}</Text>
+                    </Flex>
+                    <Flex gap='1'>
+                    <Text fontWeight={'700'}>Status:</Text>
                     <Text>
-                        {request.compl
-                        ? 'completed'
-                        : 'not completed'}
+                     {request.compl
+                        ? 'Completed'
+                        : 'Not Completed'}
                     </Text>
+                    </Flex>
+                  
                 </Stack>
             </CardBody>
             <CardFooter gap={3}>

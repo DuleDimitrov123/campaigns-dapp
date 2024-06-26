@@ -19,17 +19,18 @@ import { Field, Form, Formik } from 'formik';
 import CampaignContract from '../ethereum/campaignContract';
 import web3 from "../ethereum/web3";
 
-const DonateModal = ({isOpen, onClose, campaignAddress}) => {
+const DonateModal = ({isOpen, onClose, campaignAddress, fetchCampaignDetails}) => {
+    console.log(fetchCampaignDetails);
     const initialValues={donationValue:''};
 
     const validateDonationValue = (value) => {
         let error;
         if (!value) {
-          error = 'Donation value is required';
+            error = 'Donation value is required';
         } else if (isNaN(value)) {
-          error = 'Donation value must be a number';
+            error = 'Donation value must be a number';
         } else if (parseFloat(value) <= 0) {
-          error = 'Donation value must be greater than zero';
+            error = 'Donation value must be greater than zero';
         }
         return error;
       };
@@ -48,6 +49,7 @@ const DonateModal = ({isOpen, onClose, campaignAddress}) => {
 
         formikActions.setSubmitting(false);
         onClose();
+        fetchCampaignDetails();
     }
 
     return (
