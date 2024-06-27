@@ -1,10 +1,10 @@
-import { Flex, Heading, Stack, Text, Button, useDisclosure, VStack } from "@chakra-ui/react";
+import { Flex, Heading, Stack, Text, Button, useDisclosure, VStack, UnorderedList, ListItem } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import CreateRequestModal from "./CreateRequestModal";
 import DonateModal from "./DonateModal";
 
 
-const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, numberOfDonors}) => {
+const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, donors}) => {
     const { address } = useParams();
 
     const { isOpen: isCreateRequestModalOpen, onOpen: onCreateRequestModalOpen, onClose: onCreateRequestModalClose } = useDisclosure();
@@ -35,13 +35,21 @@ const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, numb
                     </Flex>
                     <Flex gap='1' alignItems={'start'} flexDir={'column'}>
                         <Text fontSize={'md'} color='gray.500'>Number of donors:</Text>
-                        <Text color='blue.600' fontSize='xl'> {numberOfDonors} </Text>
+                        <Text color='blue.600' fontSize='xl'> {donors.length} </Text>
+                    </Flex>
+                    <Flex gap='1' flexDir={'column'}>
+                        <Text fontSize={'md'} color='gray.500'>Donors:</Text>
+                        <UnorderedList>
+                            {donors.map((donor, index) => (
+                                <ListItem key={index}>{donor}</ListItem>
+                            ))}
+                        </UnorderedList>
                     </Flex>
                 </Stack>
             </VStack>
             <Flex gap='10'>
                 <Button onClick={onCreateRequestModalOpen} colorScheme="blue" >Create request</Button>
-                <Button onClick={onDonateModalOpen} colorScheme="blue" >Donate</Button>
+                <Button onClick={onDonateModalOpen} colorScheme="blue">Donate</Button>
             </Flex>
             <CreateRequestModal isOpen={isCreateRequestModalOpen} onClose={onCreateRequestModalClose} campaignAddress={address} fetchCampaignDetails={fetchCampaignDetails}  />
             <DonateModal isOpen={isDonateModalOpen} onClose={onDonateModalClose} campaignAddress={address} fetchCampaignDetails={fetchCampaignDetails} />

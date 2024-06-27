@@ -18,7 +18,7 @@ const Campaign = () => {
         requests: []
     });
     const [totalDonationsInEth, setTotalDonationsInEth] = useState(0);
-    const [numberOfDonors, setNumberOfDonors] = useState(0);
+    const [donors, setDonors] = useState(0);
 
     const fetchCampaignDetails = async () => {
         setLoading(true);
@@ -36,6 +36,7 @@ const Campaign = () => {
         for (let i=0; i<= requestsCount - 1; i++) {
             let request = await campaignContract.methods.getRequest(i).call();
             request.val = web3.utils.fromWei(request.val, 'ether')
+            request.approvers = await campaignContract.methods.getApprovers(i).call();
             requests.push(request);
         }
 
@@ -50,8 +51,7 @@ const Campaign = () => {
         var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
         setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
 
-        const donors = await campaignContract.methods.getDonors().call();
-        setNumberOfDonors(donors.length);
+        setDonors(await campaignContract.methods.getDonors().call());
 
         setLoading(false);
     }
@@ -74,9 +74,13 @@ const Campaign = () => {
                 campaign={campaign} 
                 totalDonationsInEth={totalDonationsInEth} 
                 fetchCampaignDetails={fetchCampaignDetails}
-                numberOfDonors={numberOfDonors}
+                donors={donors}
             />
-            <CampaignRequests requests={campaign?.requests} />
+            <CampaignRequests 
+                requests={campaign?.requests} 
+                campaignAddress={address}
+                fetchCampaignDetails={fetchCampaignDetails} 
+            />
         </Flex>
     )
 }
