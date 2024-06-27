@@ -7,7 +7,7 @@ import CampaignManagerContract from "../ethereum/campaignManagerContract";
 import web3 from "../ethereum/web3";
 
 const CreateCampaign = () => {
-    const initialValues={title:'',description:'',minDonationInWei:''};
+    const initialValues={title:'',description:'',minDonationInEth:''};
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
@@ -27,27 +27,30 @@ const CreateCampaign = () => {
         return error;
     }
 
-    const validateMinDonationInWei = (value) => {
+    const validateMinDonationInEth = (value) => {
         let error;
         if (!value) {
-            error = 'Min donation in Wei is required';
-        } 
+            error = 'Donation value is required';
+        } else if (isNaN(value)) {
+            error = 'Donation value must be a number';
+        } else if (parseFloat(value) <= 0) {
+            error = 'Donation value must be greater than zero';
+        }
         return error;
     }
 
     const createNewCampaign = async (campaign, formikActions) => {
         const campaignManagerContract = CampaignManagerContract();
         const accounts = await web3.eth.getAccounts();
-        //console.log(accounts);
+
+        const minDonationInWei = web3.utils.toWei(`${campaign.minDonationInEth}`, 'ether');
         await campaignManagerContract.methods.createCampaign(
             accounts[0],
             campaign.title,
             campaign.description,
-            campaign.minDonationInWei
+            minDonationInWei
         )
         .send({from:accounts[0], gas:'5000000'});
-
-        console.log("Created...");
 
         formikActions.setSubmitting(false)
         navigate(`/`);
@@ -86,12 +89,18 @@ const CreateCampaign = () => {
                             </FormControl>
                             )}
                         </Field>
-                        <Field name='minDonationInWei' validate={validateMinDonationInWei}>
+                        <Field name='minDonationInEth' validate={validateMinDonationInEth}>
                             {({ field, form }) => (
-                            <FormControl isInvalid={form.errors.minDonationInWei && form.touched.minDonationInWei}>
-                                <FormLabel>Min donation in Wei</FormLabel>
-                                <Input {...field} placeholder='Enter min donation in wei...' />
-                                <FormErrorMessage>{form.errors.minDonationInWei}</FormErrorMessage>
+                            <FormControl isInvalid={form.errors.minDonationInEth && form.touched.minDonationInEth}>
+                                <FormLabel>Min donation in ETH</FormLabel>
+                                <Input
+                                        {...field}
+                                        placeholder='Enter min donation in eth...'
+                                        size='sm'
+                                        type='number'
+                                        step='0.01'
+                                />
+                                <FormErrorMessage>{form.errors.minDonationInEth}</FormErrorMessage>
                             </FormControl>
                             )}
                         </Field>

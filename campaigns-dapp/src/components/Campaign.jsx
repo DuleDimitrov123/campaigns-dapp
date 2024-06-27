@@ -18,9 +18,10 @@ const Campaign = () => {
         requests: []
     });
     const [totalDonationsInEth, setTotalDonationsInEth] = useState(0);
-    const [donors, setDonors] = useState(0);
+    const [donors, setDonors] = useState([]);
 
     const fetchCampaignDetails = async () => {
+        console.log("fetchCampaignDetails");
         setLoading(true);
         var campaignContract = CampaignContract(address);
 
@@ -48,10 +49,13 @@ const Campaign = () => {
             requests:requests
         });
 
-        var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
-        setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
-
         setDonors(await campaignContract.methods.getDonors().call());
+
+        if (donors.length !== 0)
+        {
+            var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
+            setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
+        }
 
         setLoading(false);
     }

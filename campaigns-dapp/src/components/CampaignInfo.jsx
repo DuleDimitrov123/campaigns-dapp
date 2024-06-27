@@ -5,6 +5,7 @@ import DonateModal from "./DonateModal";
 
 
 const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, donors}) => {
+    console.log("donors", donors);
     const { address } = useParams();
 
     const { isOpen: isCreateRequestModalOpen, onOpen: onCreateRequestModalOpen, onClose: onCreateRequestModalClose } = useDisclosure();
@@ -35,12 +36,12 @@ const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, dono
                     </Flex>
                     <Flex gap='1' alignItems={'start'} flexDir={'column'}>
                         <Text fontSize={'md'} color='gray.500'>Number of donors:</Text>
-                        <Text color='blue.600' fontSize='xl'> {donors.length} </Text>
+                        <Text color='blue.600' fontSize='xl'> {donors?.length} </Text>
                     </Flex>
                     <Flex gap='1' flexDir={'column'}>
                         <Text fontSize={'md'} color='gray.500'>Donors:</Text>
                         <UnorderedList>
-                            {donors.map((donor, index) => (
+                            {donors?.map((donor, index) => (
                                 <ListItem key={index}>{donor}</ListItem>
                             ))}
                         </UnorderedList>
