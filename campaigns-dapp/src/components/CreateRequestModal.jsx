@@ -55,8 +55,11 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress, fetchCampaignDet
             .send({from:accounts[0], gas:'5000000'});
 
         formikActions.setSubmitting(false);
+        console.log("Before onClose")
         onClose();
+        console.log("After onClose")
         fetchCampaignDetails();
+        console.log("After fetch")
     }
 
     return (
@@ -67,7 +70,7 @@ const CreateRequestModal = ({ isOpen, onClose, campaignAddress, fetchCampaignDet
             <ModalCloseButton />
             <Formik
                 initialValues={initialValues}
-                onSubmit={async (values, actions) => createNewRequest(values, actions)}
+                onSubmit={(values, actions) => createNewRequest(values, actions)}
             >
             {(props) => (
                 <Form>
