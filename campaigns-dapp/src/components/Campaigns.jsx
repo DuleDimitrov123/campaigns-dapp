@@ -16,7 +16,6 @@ const Campaigns = () => {
             const accounts = await web3.eth.getAccounts();
             const campaignAddresses = await campaignManagerContract.methods.getCampagins()
                 .call({from:accounts[0]});
-            console.log(campaignAddresses);
 
             let campaigns = await Promise.all(
                 Array(campaignAddresses.length).fill().map( async (element, i) => {

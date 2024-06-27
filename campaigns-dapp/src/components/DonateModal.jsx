@@ -33,7 +33,7 @@ const DonateModal = ({isOpen, onClose, campaignAddress, fetchCampaignDetails}) =
             error = 'Donation value must be greater than zero';
         }
         return error;
-      };
+    };
 
     const donate = async (values, formikActions) => {
         const campaignContract = CampaignContract(campaignAddress);

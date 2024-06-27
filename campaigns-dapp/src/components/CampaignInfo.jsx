@@ -35,6 +35,10 @@ const CampaignInfo = ({campaign, totalDonationsInEth, fetchCampaignDetails, dono
                         <Text color='blue.600' fontSize='xl'> {totalDonationsInEth} </Text>
                     </Flex>
                     <Flex gap='1' alignItems={'start'} flexDir={'column'}>
+                        <Text fontSize={'md'} color='gray.500'>Campaign balance in ETH:</Text>
+                        <Text color='blue.600' fontSize='xl'> {campaign.balanceInEth} </Text>
+                    </Flex>
+                    <Flex gap='1' alignItems={'start'} flexDir={'column'}>
                         <Text fontSize={'md'} color='gray.500'>Number of donors:</Text>
                         <Text color='blue.600' fontSize='xl'> {donors?.length} </Text>
                     </Flex>

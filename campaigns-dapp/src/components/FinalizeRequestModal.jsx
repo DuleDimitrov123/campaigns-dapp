@@ -20,7 +20,8 @@ const FinalizeRequestModal = ({isOpen, onClose, campaignAddress, index, fetchCam
         const campaignContract = CampaignContract(campaignAddress);
         const accounts = await web3.eth.getAccounts();
 
-        //real finalizing
+        await campaignContract.methods.finalizeRequest(index)
+            .send({from:accounts[0], gas:'5000000'});
 
         setIsSubmitting(false);
         onClose();

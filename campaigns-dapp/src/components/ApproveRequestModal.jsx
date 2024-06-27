@@ -20,10 +20,8 @@ const ApproveRequestModal = ({isOpen, onClose, campaignAddress, index, fetchCamp
         const campaignContract = CampaignContract(campaignAddress);
         const accounts = await web3.eth.getAccounts();
 
-        console.log("BEFORE APPROVE");
         await campaignContract.methods.approveRequest(index)
             .send({from:accounts[0], gas:'5000000'});
-        console.log("AFTER APPROVE");
 
         setIsSubmitting(false);
         onClose();

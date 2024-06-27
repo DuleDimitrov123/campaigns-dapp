@@ -67,8 +67,8 @@ const RequestCard = ({request, campaignAddress, index, fetchCampaignDetails}) =>
                 </Stack>
             </CardBody>
             <CardFooter gap={3}>
-                <Button colorScheme="blue" onClick={() => approve()}>Approve</Button>
-                <Button colorScheme="blue" onClick={() => finalize()}>Finalize</Button>
+                <Button isDisabled={request.compl} colorScheme="blue" onClick={() => approve()}>Approve</Button>
+                <Button isDisabled={request.compl} colorScheme="blue" onClick={() => finalize()}>Finalize</Button>
             </CardFooter>
             <ApproveRequestModal 
                 isOpen={isApproveRequestModalOpen} 

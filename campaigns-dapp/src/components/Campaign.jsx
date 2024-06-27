@@ -15,6 +15,7 @@ const Campaign = () => {
         title: '',
         description: '',
         minDonationInEth: '',
+        balanceInEth: '',
         requests: []
     });
     const [totalDonationsInEth, setTotalDonationsInEth] = useState(0);
@@ -32,6 +33,8 @@ const Campaign = () => {
         const minDonationInEth = web3.utils.fromWei(minDonationInWei, 'ether');
         const requestsCount = await campaignContract.methods.getRequestCount().call();
 
+        const balanceInEth = web3.utils.fromWei(await web3.eth.getBalance(address), 'ether');
+
         let requests = [];
         console.log(requestsCount);
         for (let i=0; i<= requestsCount - 1; i++) {
@@ -46,12 +49,13 @@ const Campaign = () => {
             title: title,
             description: description,
             minDonationInEth: minDonationInEth,
+            balanceInEth: balanceInEth,
             requests:requests
         });
 
-        setDonors(await campaignContract.methods.getDonors().call());
-
-        if (donors.length !== 0)
+        var currentDonors = await campaignContract.methods.getDonors().call()
+        setDonors(currentDonors);
+        if (currentDonors.length !== 0)
         {
             var totalDonationsInWei = await campaignContract.methods.getTotalDonations().call();
             setTotalDonationsInEth(web3.utils.fromWei(totalDonationsInWei, 'ether'));
